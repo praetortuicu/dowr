@@ -1,7 +1,11 @@
 #include "dowr.h"
 #include <fstream>
 #include <iostream>
+#include <string>
 #include <regex>
+
+#define NAME_MARK "_name" 
+#define PARAMETER_MARK "_param"
 
 std::fstream readFileObject;
 std::fstream writeFileObject;
@@ -11,7 +15,7 @@ void read_new_file(std::string fileName){
 		readFileObject.open(fileName, std::fstream::in);
 	}
 	else{
-		printf("Error! File already opened....\n");
+		printf("Error! File already opened...\n");
 		return ;
 	}
 }
@@ -22,23 +26,37 @@ void close_opened_file(std::string fileName){
 		readFileObject.close();
 	}
 	else{
-		printf("Could not open file! Already closed....\n");
+		printf("Could not open file! Already closed...\n");
 		return ;
 	}
 }
 
-void open_write_file(){
-	writeFileObject.open("README.md", std::fstream::out | std::fstream::app);
+void open_write_file(std::string fileName){
+	std::string fileDocName;
+	fileDocName.append(fileName);
+	writeFileObject.open(fileDocName, std::fstream::out | std::fstream::app);
 	if(readFileObject.is_open()){
-		printf("File open, waiting to write in README.md....\n");	
+		printf("File open, waiting to write in file doc...\n");
+	}
+	else{
+		printf("Failed to open doc file! File to read couldn't open...");
+		return ;
 	}
 }
 
 int main(int argc, char *argv[]){
 	std::string fileName = argv[2];
 	read_new_file(fileName);
-	open_write_file();
-
+	open_write_file(fileName);
+	std::string line;
+	std::smatch name_match;
+	std::smatch param_match;
+	std::regex marks(NAME_MARK, PARAMETER_MARK);
+	if(readFileObject.is_open() && !readFileObject.eof()){
+		while(getline(readFileObject, line)){
+			std::regex_search(line, name_match, marks);
+	}	
+}
 
 
 	close_opened_file(fileName);
