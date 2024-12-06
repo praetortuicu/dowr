@@ -9,8 +9,25 @@
 
 std::fstream readFileObject;
 std::fstream writeFileObject;
+std::fstream writeLogObject;
 
-void read_new_file(std::string fileName){
+/*
+_name_: open_log_file
+_param_: std::string &fileName
+*/
+
+void open_log_file(std::string &fileName){
+	std::string log_name = fileName.append(".log");
+	try{
+		writeLogObject.open(log_name, std::fstream::in | std::fstream::out | std::fstream::app);
+		writeLogObject << "Opened " << fileName << " successfully!\n";
+	}
+	catch(std::exception &e){
+		printf("Something went wrong when creating the .log file!\n");
+	}
+}
+
+void read_new_file(const std::string &fileName){
 	if(!readFileObject.is_open()){
 		readFileObject.open(fileName, std::fstream::in);
 	}
@@ -20,7 +37,7 @@ void read_new_file(std::string fileName){
 	return ;
 }
 
-void close_opened_file(std::string fileName){
+void close_opened_file(const std::string &fileName){
 	if(readFileObject.is_open()){
 		printf("Closing file...\n");
 		readFileObject.close();
@@ -31,7 +48,7 @@ void close_opened_file(std::string fileName){
 	return ;
 }
 
-void open_write_file(std::string fileName){
+void open_write_file(const std::string &fileName){
 	std::string fileDocName;
 	fileDocName.append(fileName);
 	writeFileObject.open(fileDocName, std::fstream::out | std::fstream::app);
@@ -43,7 +60,7 @@ void open_write_file(std::string fileName){
 	}
 	return ;
 }
-void close_write_file(std::string fileName){
+void close_write_file(const std::string &fileName){
 	if(writeFileObject.is_open()){
 		printf("Closing file...");
 		writeFileObject.close();
@@ -51,12 +68,14 @@ void close_write_file(std::string fileName){
 	else{
 		printf("Write file already closed!");	
 	}
-	return;
+	return ;
 }
 
 int main(int argc, char *argv[]){
-	std::string fileName = argv[2];
+	char *fname = argv[1];
+	std::string fileName(fname);
 	read_new_file(fileName);
+	printf("Opening %s\n", fname);
 	std::string fileNameDoc = fileName.append("DOC");
 	open_write_file(fileNameDoc);
 	std::string line;
@@ -66,6 +85,7 @@ int main(int argc, char *argv[]){
 	if(readFileObject.is_open() && !readFileObject.eof()){
 		while(getline(readFileObject, line)){
 			if(std::regex_search(line, name_match, marks)){
+				printf("Writing into file...\n");
 				writeFileObject << line << "\n";	
 			}
 		}	
