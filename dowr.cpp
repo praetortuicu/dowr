@@ -30,6 +30,7 @@ void open_log_file(std::string &fileName){
 void read_new_file(const std::string &fileName){
 	if(!readFileObject.is_open()){
 		readFileObject.open(fileName, std::fstream::in);
+		printf("File %s opened!\n", fileName.c_str());
 	}
 	else{
 		printf("Error! File already opened...\n");
