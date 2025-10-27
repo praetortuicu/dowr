@@ -1,4 +1,4 @@
-#include "dowr.h"
+#include "dowr.hpp"
 #include <fstream>
 #include <iostream>
 #include <string>
@@ -10,11 +10,6 @@
 std::fstream readFileObject;
 std::fstream writeFileObject;
 std::fstream writeLogObject;
-
-/*
-_name_: open_log_file
-_param_: std::string &fileName
-*/
 
 void open_log_file(std::string &fileName){
 	std::string log_name = fileName.append(".log");
